@@ -14,19 +14,19 @@ import Rcl.App
 import Rcl.PackageName
 
 getChangelogFromTo :: PackageName -> Version -> Version -> RIO App Text
-getChangelogFromTo name toVersion fromVersion = do
+getChangelogFromTo name version oldVersion = do
   req <-
     parseRequestThrow
     $ "http://hackage.haskell.org/package/"
     <> unpack (unPackageName name)
     <> "-"
-    <> showVersion toVersion
+    <> showVersion version
     <> "/changelog"
 
   T.strip
     . T.unlines
     . drop 1 -- Hackage's automatic title
-    . changeLogLinesTo fromVersion
+    . changeLogLinesTo oldVersion
     . getResponseBody
     <$> httpBS req
 
