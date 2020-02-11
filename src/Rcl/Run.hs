@@ -76,10 +76,9 @@ renderChanged name change = T.unlines $ header <> case change of
       <> " to "
       <> tshowVersion toVersion
     , ""
-    , "```"
-    , changelog
-    , "```"
+    , quote changelog
     ]
  where
   header = ["## " <> unPackageName name, ""]
+  quote = T.unlines . map ("> " <>) . T.lines
   tshowVersion = pack . showVersion
