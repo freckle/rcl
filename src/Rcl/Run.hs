@@ -20,21 +20,19 @@ import Rcl.PackageName
 
 run :: RIO App ()
 run = do
-  options <- asks appOptions
+  Options {..} <- asks appOptions
 
   logDebug
     $ "Fetching change details between "
-    <> displayShow (oFromResolver options)
+    <> displayShow oFromResolver
     <> " and "
-    <> displayShow (oToResolver options)
+    <> displayShow oToResolver
 
-  changedPackages <- getResolverDiff
-    (oFromResolver options)
-    (oToResolver options)
+  changedPackages <- getResolverDiff oFromResolver oToResolver
 
   let
     relevantPackages = sortOn cpName
-      $ filter ((`Set.member` oDependencies options) . cpName) changedPackages
+      $ filter ((`Set.member` oDependencies) . cpName) changedPackages
 
   logDebug
     $ "Resolver differs in "
@@ -55,7 +53,7 @@ run = do
     pure $ renderChanged cpName change
 
   let
-    url = resolverDiffUrl (oFromResolver options) (oToResolver options)
+    url = resolverDiffUrl oFromResolver oToResolver
     header = ["[Stackage diff](" <> pack url <> ")", "", "Changelogs:", ""]
 
   liftIO $ T.putStrLn $ T.intercalate "\n" $ header <> changes
