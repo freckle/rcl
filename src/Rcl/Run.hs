@@ -54,7 +54,11 @@ run = do
     logDebug $ "Changed " <> displayShow cpName <> ": " <> displayShow change
     pure $ renderChanged cpName change
 
-  liftIO $ T.putStrLn $ T.intercalate "\n" changes
+  let
+    url = resolverDiffUrl (oFromResolver options) (oToResolver options)
+    header = ["[Stackage diff](" <> pack url <> ")", "", "Changelogs:", ""]
+
+  liftIO $ T.putStrLn $ T.intercalate "\n" $ header <> changes
 
 data Change
   = Removed Version

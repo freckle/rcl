@@ -1,6 +1,7 @@
 module Rcl.ChangedPackage
   ( ChangedPackage(..)
   , getResolverDiff
+  , resolverDiffUrl
   )
 where
 
@@ -38,12 +39,7 @@ data ResolverDiff = ResolverDiff
 
 getResolverDiff :: Resolver -> Resolver -> RIO App [ChangedPackage]
 getResolverDiff fromResolver toResolver = do
-  req <-
-    parseRequestThrow
-    $ "https://www.stackage.org/diff/"
-    <> unpack (unResolver fromResolver)
-    <> "/"
-    <> unpack (unResolver toResolver)
+  req <- parseRequestThrow $ resolverDiffUrl fromResolver toResolver
   mapMaybe (uncurry changedPackage)
     . HashMap.toList
     . diff
@@ -55,6 +51,13 @@ getResolverDiff fromResolver toResolver = do
       (HashMap.lookup fromResolver info)
       (HashMap.lookup toResolver info)
     pure ChangedPackage { cpName = name, cpDiff = change }
+
+resolverDiffUrl :: Resolver -> Resolver -> String
+resolverDiffUrl fromResolver toResolver =
+  "https://www.stackage.org/diff/"
+    <> unpack (unResolver fromResolver)
+    <> "/"
+    <> unpack (unResolver toResolver)
 
 maybeToThese :: Maybe a -> Maybe b -> Maybe (These a b)
 maybeToThese (Just a) Nothing = Just $ This a
