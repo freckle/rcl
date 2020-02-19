@@ -73,7 +73,9 @@ library:
   dependencies:
     - aeson
     - containers
+    - http-client
     - http-conduit
+    - http-types
     - optparse-applicative
     - text
     - these
