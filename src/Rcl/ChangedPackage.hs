@@ -8,7 +8,6 @@ where
 import RIO
 
 import Data.Aeson
-import Data.HashMap.Strict (HashMap)
 import qualified Data.HashMap.Strict as HashMap
 import Data.Text (unpack)
 import Data.These
