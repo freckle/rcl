@@ -1,5 +1,5 @@
 module Rcl.Run
-  ( run
+  ( fetchChangesMarkdown
   )
 where
 
@@ -7,9 +7,8 @@ import RIO
 
 import Data.List (sortOn)
 import qualified Data.Set as Set
-import Data.Text (Text, pack)
+import Data.Text (pack)
 import qualified Data.Text as T
-import qualified Data.Text.IO as T
 import Data.These
 import Data.Version (Version, showVersion)
 import Rcl.App
@@ -18,8 +17,8 @@ import Rcl.Changelog
 import Rcl.Options
 import Rcl.PackageName
 
-run :: RIO App ()
-run = do
+fetchChangesMarkdown :: RIO App [Text]
+fetchChangesMarkdown = do
   Options {..} <- asks appOptions
 
   logDebug
@@ -41,7 +40,7 @@ run = do
     <> displayShow (length relevantPackages)
     <> " are dependencies"
 
-  changes <- for relevantPackages $ \ChangedPackage {..} -> do
+  for relevantPackages $ \ChangedPackage {..} -> do
     change <- case cpDiff of
       This version -> pure $ Removed version
       That version -> pure $ Added version
@@ -51,12 +50,6 @@ run = do
 
     logDebug $ "Changed " <> displayShow cpName <> ": " <> displayShow change
     pure $ renderChanged cpName change
-
-  let
-    url = resolverDiffUrl oFromResolver oToResolver
-    header = ["[Stackage diff](" <> pack url <> ")", "", "Changelogs:", ""]
-
-  liftIO $ T.putStrLn $ T.intercalate "\n" $ header <> changes
 
 data Change
   = Removed Version

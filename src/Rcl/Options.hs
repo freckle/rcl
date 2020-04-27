@@ -8,7 +8,6 @@ where
 
 import RIO
 
-import Data.Set (Set)
 import qualified Data.Set as Set
 import Options.Applicative
 import Rcl.PackageName

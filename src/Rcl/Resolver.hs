@@ -6,7 +6,6 @@ where
 import RIO
 
 import Data.Aeson
-import Data.Text (Text)
 
 newtype Resolver = Resolver
   { unResolver :: Text
