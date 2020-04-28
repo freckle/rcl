@@ -17,6 +17,8 @@ import Network.HTTP.Simple
 import Rcl.App
 import Rcl.PackageName
 import Rcl.Resolver
+import Rcl.SillyArrayMap (SillyArrayMap)
+import qualified Rcl.SillyArrayMap as SillyArrayMap
 
 -- | Details for a changed package
 data ChangedPackage = ChangedPackage
@@ -32,7 +34,7 @@ data ChangedPackage = ChangedPackage
 
 data ResolverDiff = ResolverDiff
   { comparing :: [Text]
-  , diff :: HashMap PackageName (HashMap Resolver Version)
+  , diff :: SillyArrayMap PackageName (HashMap Resolver Version)
   }
   deriving stock Generic
   deriving anyclass FromJSON
@@ -41,7 +43,7 @@ getResolverDiff :: Resolver -> Resolver -> RIO App [ChangedPackage]
 getResolverDiff fromResolver toResolver = do
   req <- parseRequestThrow $ resolverDiffUrl fromResolver toResolver
   mapMaybe (uncurry changedPackage)
-    . HashMap.toList
+    . SillyArrayMap.toList
     . diff
     . getResponseBody
     <$> httpJSON req

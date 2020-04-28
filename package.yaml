@@ -80,6 +80,7 @@ library:
     - text
     - these
     - unordered-containers
+    - vector
 
 executables:
   rcl:
