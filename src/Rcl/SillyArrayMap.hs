@@ -28,7 +28,7 @@
 --
 -- Which is /not/ easy to work with in Haskell (list of heterogenious list).
 --
--- I guess is nicer for JavaScript? Any, I'm representing this silly type and
+-- I guess is nicer for JavaScript? Anyway, I'm representing this silly type and
 -- JSON parser here, to isolate the mess. It allows a drop-in change in my main
 -- type to fix the parsing.
 --
