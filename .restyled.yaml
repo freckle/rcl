@@ -1,4 +1,7 @@
 - brittany
-- hlint
+- hlint:
+    include:
+      - "**/*.hs"
+      - "!src/Rcl/SillyArrayMap.hs" # TypeApplications breaks apply-refact
 - shfmt
 - stylish-haskell
