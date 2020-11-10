@@ -85,7 +85,7 @@ library:
 executables:
   rcl:
     main: Main.hs
-    source-dirs: executables
+    source-dirs: rcl
     dependencies:
       - rcl
       - optparse-applicative
