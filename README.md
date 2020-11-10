@@ -23,6 +23,9 @@ Available options:
   -h,--help                Show this help text
 ```
 
+**NOTE**: See the separate `rcl-stack-dependencies` executable for printing a
+unique list of dependencies in a (possibly multi-package) Stack project.
+
 ## Example
 
 See `tests/integration` for actual arguments.
