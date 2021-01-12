@@ -11,12 +11,23 @@ import Data.Version
 import Network.HTTP.Client (HttpExceptionContent(..))
 import Network.HTTP.Simple
 import Network.HTTP.Types.Status (status404)
-import Rcl.App
 import Rcl.PackageName
 
-getChangelogFromTo :: PackageName -> Version -> Version -> RIO App Text
+getChangelogFromTo
+  :: (MonadUnliftIO m, MonadReader env m, HasLogFunc env)
+  => PackageName
+  -> Version
+  -> Version
+  -> m Text
 getChangelogFromTo name version oldVersion = handleJust notFound pure $ do
-  req <- parseRequestThrow $ changelogUrl name version
+  let
+    url = changelogUrl name version
+    req = parseRequest_ url
+  logDebug
+    $ "Fetching changelog for "
+    <> display name
+    <> " from "
+    <> fromString url
   changelogFromTo version oldVersion . getResponseBody <$> httpBS req
 
 notFound :: HttpException -> Maybe Text

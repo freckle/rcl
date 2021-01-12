@@ -20,8 +20,8 @@ spec = do
       let
         sillyJson = mconcat
           [ "["
-          , "  [\"foo\", {\"lts-x\": \"1.2.0\", \"lts-y\": \"1.3.0\"}],"
-          , "  [\"bar\", {\"lts-x\": \"2.2.0\", \"lts-y\": \"2.2.1\"}]"
+          , "  [\"foo\", {\"lts-1.0\": \"1.2.0\", \"lts-1.5\": \"1.3.0\"}],"
+          , "  [\"bar\", {\"lts-1.0\": \"2.2.0\", \"lts-1.5\": \"2.2.1\"}]"
           , "]"
           ]
 
@@ -31,10 +31,14 @@ spec = do
       decoded `shouldBe` Right
         [ ( "foo"
           , HashMap.fromList
-            [("lts-x", makeVersion [1, 2, 0]), ("lts-y", makeVersion [1, 3, 0])]
+            [ ("lts-1.0", makeVersion [1, 2, 0])
+            , ("lts-1.5", makeVersion [1, 3, 0])
+            ]
           )
         , ( "bar"
           , HashMap.fromList
-            [("lts-x", makeVersion [2, 2, 0]), ("lts-y", makeVersion [2, 2, 1])]
+            [ ("lts-1.0", makeVersion [2, 2, 0])
+            , ("lts-1.5", makeVersion [2, 2, 1])
+            ]
           )
         ]

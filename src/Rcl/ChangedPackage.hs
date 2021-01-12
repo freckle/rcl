@@ -13,7 +13,6 @@ import Data.Text (unpack)
 import Data.These
 import Data.Version
 import Network.HTTP.Simple
-import Rcl.App
 import Rcl.PackageName
 import Rcl.Resolver
 import Rcl.SillyArrayMap (SillyArrayMap)
@@ -38,9 +37,9 @@ data ResolverDiff = ResolverDiff
   deriving stock Generic
   deriving anyclass FromJSON
 
-getResolverDiff :: Resolver -> Resolver -> RIO App [ChangedPackage]
+getResolverDiff :: MonadIO m => Resolver -> Resolver -> m [ChangedPackage]
 getResolverDiff fromResolver toResolver = do
-  req <- parseRequestThrow $ resolverDiffUrl fromResolver toResolver
+  let req = parseRequest_ $ resolverDiffUrl fromResolver toResolver
   mapMaybe (uncurry changedPackage)
     . SillyArrayMap.toList
     . diff

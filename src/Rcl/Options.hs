@@ -16,8 +16,8 @@ import Rcl.Resolver
 data Options = Options
   { oDebug :: Bool
   , oFromResolver :: Resolver
-  , oToResolver :: Resolver
-  , oDependencies :: Set PackageName
+  , oToResolver :: Maybe Resolver
+  , oDependencies :: Maybe (Set PackageName)
   }
 
 parseOptions :: IO Options
@@ -30,5 +30,5 @@ parser :: Parser Options
 parser = Options
   <$> switch (short 'd' <> long "debug")
   <*> strOption (short 'f' <> long "from" <> metavar "RESOLVER")
-  <*> strOption (short 't' <> long "to" <> metavar "RESOLVER")
-  <*> (Set.fromList <$> many (strArgument (metavar "PACKAGE")))
+  <*> optional (strOption (short 't' <> long "to" <> metavar "RESOLVER"))
+  <*> optional (Set.fromList <$> many (strArgument (metavar "PACKAGE")))

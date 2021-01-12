@@ -71,22 +71,35 @@ library:
   dependencies:
     - aeson
     - containers
+    - errors
+    - extra
+    - hashable-time
     - http-client
     - http-conduit
     - http-types
+    - lucid
+    - megaparsec
+    - mmark
     - optparse-applicative
+    - scotty
     - text
     - these
+    - transformers
     - unordered-containers
     - vector
 
 executables:
-  rcl:
+  rcl-web:
     main: Main.hs
-    source-dirs: rcl
+    source-dirs: rcl-web
     dependencies:
-      - optparse-applicative
+      - aeson
+      - containers
+      - lucid
+      - megaparsec
+      - mmark
       - rcl
+      - scotty
       - text
     ghc-options:
       - -threaded
@@ -100,19 +113,6 @@ executables:
       - aeson
       - text
       - yaml
-    ghc-options:
-      - -threaded
-      - -rtsopts
-      - -with-rtsopts=-N
-  rcl-web:
-    main: Main.hs
-    source-dirs: rcl-web
-    dependencies:
-      - aeson
-      - containers
-      - rcl
-      - scotty
-      - text
     ghc-options:
       - -threaded
       - -rtsopts
