@@ -25,6 +25,8 @@ main = do
       template <- liftIO $ runSimpleApp $ uncurry run ps
       html $ L.renderText template
 
+    get "/health-check" $ text "OK"
+
 run
   :: (MonadUnliftIO m, MonadReader env m, HasLogFunc env)
   => Maybe Resolver
