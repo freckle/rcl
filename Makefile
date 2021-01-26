@@ -1,4 +1,5 @@
-HEROKU_APP ?= resolver-changelog
+DEPLOY_ENVIRONMENT ?= prod
+DEPLOY_TAG ?= $(shell git rev-parse HEAD)
 
 .PHONY: web.watch
 web.watch:
@@ -7,5 +8,6 @@ web.watch:
 
 .PHONY: deploy
 deploy:
-	heroku container:push web --app $(HEROKU_APP)
-	heroku container:release web --app $(HEROKU_APP)
+	platform container:login
+	platform container:push --tag $(DEPLOY_TAG) --no-create
+	platform deploy --environment $(DEPLOY_ENVIRONMENT) --tag $(DEPLOY_TAG)

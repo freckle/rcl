@@ -1,0 +1,9 @@
+environments:
+  prod:
+    AppSubDomain: rcl
+
+uses: web
+with:
+  container:
+    environment:
+      PORT: 80
