@@ -16,7 +16,6 @@ WORKDIR /src
 COPY stack.yaml package.yaml /src/
 RUN stack install --dependencies-only
 COPY src /src/src
-COPY rcl /src/rcl
 COPY rcl-stack-dependencies /src/rcl-stack-dependencies
 COPY rcl-web /src/rcl-web
 RUN stack install
