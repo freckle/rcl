@@ -125,5 +125,6 @@ tests:
     dependencies:
       - aeson
       - hspec
+      - QuickCheck
       - rcl
       - unordered-containers
