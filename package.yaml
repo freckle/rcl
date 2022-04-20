@@ -27,44 +27,31 @@ ghc-options:
 
 default-extensions:
   - BangPatterns
-  - BinaryLiterals
-  - ConstraintKinds
   - DataKinds
-  - DefaultSignatures
   - DeriveAnyClass
-  - DeriveDataTypeable
   - DeriveFoldable
   - DeriveFunctor
   - DeriveGeneric
+  - DeriveLift
   - DeriveTraversable
   - DerivingStrategies
-  - DoAndIfThenElse
-  - EmptyDataDecls
-  - ExistentialQuantification
   - FlexibleContexts
   - FlexibleInstances
-  - FunctionalDependencies
   - GADTs
   - GeneralizedNewtypeDeriving
-  - InstanceSigs
-  - KindSignatures
   - LambdaCase
   - MultiParamTypeClasses
-  - MultiWayIf
-  - NamedFieldPuns
   - NoImplicitPrelude
+  - NoMonomorphismRestriction
   - OverloadedStrings
-  - PartialTypeSignatures
-  - PatternGuards
-  - PolyKinds
+  - QuasiQuotes
   - RankNTypes
   - RecordWildCards
   - ScopedTypeVariables
   - StandaloneDeriving
-  - TupleSections
+  - TypeApplications
   - TypeFamilies
-  - TypeSynonymInstances
-  - ViewPatterns
+
 
 library:
   source-dirs: src
