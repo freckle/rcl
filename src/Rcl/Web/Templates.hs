@@ -1,5 +1,3 @@
-{-# LANGUAGE TypeApplications #-}
-
 module Rcl.Web.Templates
   ( root
   , failure
