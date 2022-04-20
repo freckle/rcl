@@ -35,8 +35,7 @@
 module Rcl.SillyArrayMap
   ( SillyArrayMap
   , toList
-  )
-where
+  ) where
 
 import RIO hiding (toList)
 
