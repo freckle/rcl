@@ -1,20 +1,21 @@
+{-# LANGUAGE TypeApplications #-}
+
 module Rcl.Web.Templates
   ( root
   , failure
-  )
-where
+  ) where
 
 import RIO
 
 import Data.Version (Version, showVersion)
 import Lucid hiding (for_)
+import RIO.Text (pack)
+import qualified RIO.Text as T
 import Rcl.PackageName
 import Rcl.Resolver
 import Rcl.Run (Change(..), Changes(..))
-import RIO.Text (pack)
-import qualified RIO.Text as T
-import qualified Text.Megaparsec as M
 import qualified Text.MMark as MMark
+import qualified Text.Megaparsec as M
 
 root :: NonEmpty Resolver -> Changes -> Html ()
 root resolvers Changes {..} =
@@ -84,28 +85,55 @@ resolverSelect name resolvers selected =
 
 changeTemplate :: Resolver -> PackageName -> Change -> Html ()
 changeTemplate resolver name = \case
-  Removed v -> packageSection "removed" resolver name v $ pure ()
-  Added v -> packageSection "added" resolver name v $ pure ()
+  Removed v -> packageSection "removed" resolver name (Nothing, v) $ pure ()
+  Added v -> packageSection "added" resolver name (Nothing, v) $ pure ()
   Changed fromV toV md -> do
     let cls = if toV > fromV then "upgraded" else "downgraded"
-    packageSection cls resolver name toV $ do
-      p_ $ toHtml $ "Previous version: " <> pack (showVersion fromV)
+    packageSection cls resolver name (Just fromV, toV) $ do
       unless (T.null md) $ changeLogDetails md
 
 packageSection
-  :: Text -> Resolver -> PackageName -> Version -> Html () -> Html ()
-packageSection cls resolver name v inner = section_ [class_ cls] $ do
-  p_ $ do
-    strong_ $ a_ [href_ packageUrl] $ toHtml packageName
-    toHtml $ " was " <> cls
-  inner
+  :: Text
+  -> Resolver
+  -> PackageName
+  -> (Maybe Version, Version)
+  -> Html ()
+  -> Html ()
+packageSection cls resolver name (mFromV, toV) inner =
+  section_ [class_ cls] $ do
+    p_ $ do
+      strong_ $ do
+        a_ [href_ packageUrl] $ do
+          toHtml $ unPackageName name
+      " " <> toHtml cls <> " "
+      strong_ $ versionChange mFromV toV
+    inner
  where
-  packageName = unPackageName name <> "-" <> pack (showVersion v)
   packageUrl =
     "https://www.stackage.org/"
       <> unResolver resolver
       <> "/package/"
-      <> packageName
+      <> unPackageName name
+      <> "-"
+      <> pack (showVersion toV)
+
+versionChange :: Maybe Version -> Version -> Html ()
+versionChange mFromV toV = do
+  case mFromV of
+    Nothing -> span_ $ toHtml $ pack (showVersion toV)
+    Just fromV -> do
+      let
+        strFrom = showVersion fromV
+        strTo = showVersion toV
+        prefixLength = length $ takeWhile id $ zipWith (==) strFrom strTo
+        prefix = take prefixLength strFrom
+        fromSuffix = drop prefixLength strFrom
+        toSuffix = drop prefixLength strTo
+      toHtml prefix
+      span_ [class_ "from"] $ toHtml fromSuffix
+      " " <> toHtmlRaw @String "&#8594;" <> " "
+      toHtml prefix
+      span_ [class_ "to"] $ toHtml toSuffix
 
 changeLogDetails :: Text -> Html ()
 changeLogDetails md = details_ $ do
@@ -147,5 +175,11 @@ css = T.unlines
   , ""
   , ".me-2 {"
   , "  margin-right: .5rem!important;"
+  , "}"
+  , ".from {"
+  , "  background-color: #ffcccc;"
+  , "}"
+  , ".to {"
+  , "  background-color: #d0f0c0;"
   , "}"
   ]

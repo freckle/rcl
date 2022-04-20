@@ -69,7 +69,7 @@ parseSillyArrayElem = withArray "SillyArrayMapElement" $ go . V.toList
 
 parseJSONKey :: forall k . FromJSONKey k => Value -> Parser k
 parseJSONKey v = case fromJSONKey @k of
-  FromJSONKeyCoerce _ -> withText' $ pure . unsafeCoerce
+  FromJSONKeyCoerce{} -> withText' $ pure . unsafeCoerce
   FromJSONKeyText f -> withText' $ pure . f
   FromJSONKeyTextParser f -> withText' f
   FromJSONKeyValue f -> f v
