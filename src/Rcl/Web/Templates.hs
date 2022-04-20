@@ -14,6 +14,7 @@ import qualified RIO.Text as T
 import Rcl.PackageName
 import Rcl.Resolver
 import Rcl.Run (Change(..), Changes(..))
+import Rcl.VersionDiff (VersionDiff(..), versionDiff)
 import qualified Text.MMark as MMark
 import qualified Text.Megaparsec as M
 
@@ -122,17 +123,11 @@ versionChange mFromV toV = do
   case mFromV of
     Nothing -> span_ $ toHtml $ pack (showVersion toV)
     Just fromV -> do
-      let
-        strFrom = showVersion fromV
-        strTo = showVersion toV
-        prefixLength = length $ takeWhile id $ zipWith (==) strFrom strTo
-        prefix = take prefixLength strFrom
-        fromSuffix = drop prefixLength strFrom
-        toSuffix = drop prefixLength strTo
-      toHtml prefix
+      let VersionDiff {..} = versionDiff fromV toV
+      toHtml commonPrefix
       span_ [class_ "from"] $ toHtml fromSuffix
       " " <> toHtmlRaw @String "&#8594;" <> " "
-      toHtml prefix
+      toHtml commonPrefix
       span_ [class_ "to"] $ toHtml toSuffix
 
 changeLogDetails :: Text -> Html ()
