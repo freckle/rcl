@@ -1,7 +1,6 @@
 module Rcl.Changelog
   ( getChangelogFromTo
-  )
-where
+  ) where
 
 import RIO
 
