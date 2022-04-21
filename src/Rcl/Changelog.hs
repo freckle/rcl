@@ -22,7 +22,7 @@ getChangelogFromTo
 getChangelogFromTo name version oldVersion = handleJust notFound pure $ do
   let
     url = changelogUrl name version
-    req = parseRequest_ url
+    req = setRequestHeaders [("Accept", "text/plain")] $ parseRequest_ url
   logDebug
     $ "Fetching changelog for "
     <> display name
