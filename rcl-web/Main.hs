@@ -38,10 +38,18 @@ run mFromResolver mToResolver = do
   case mResolvers of
     Nothing -> pure $ Templates.failure "Unable to fetch all Resolvers"
     Just resolvers -> do
+      let (defaultFrom, defaultTo) = lastTwo resolvers
       changes <- fetchChanges
-        (fromMaybe (NE.last resolvers) mFromResolver)
-        (fromMaybe (NE.head resolvers) mToResolver)
+        (fromMaybe defaultFrom mFromResolver)
+        (fromMaybe defaultTo mToResolver)
       pure $ Templates.root resolvers changes
+
+-- Get the last two items from a list
+--
+-- n.b. If a singleton list then the singleton value is returned twice
+--
+lastTwo :: NonEmpty a -> (a, a)
+lastTwo xs = NE.last $ NE.zip (fromMaybe xs $ NE.nonEmpty $ NE.drop 1 xs) xs
 
 paramMay :: Parsable a => LT.Text -> ActionM (Maybe a)
 paramMay name = (Just <$> param name) `rescue` (\_ -> pure Nothing)
