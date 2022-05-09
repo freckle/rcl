@@ -49,7 +49,7 @@ run mFromResolver mToResolver = do
 -- n.b. If a singleton list then the singleton value is returned twice
 --
 lastTwo :: NonEmpty a -> (a, a)
-lastTwo xs = NE.last $ NE.zip (fromMaybe xs $ NE.nonEmpty $ NE.drop 1 xs) xs
+lastTwo xs = NE.head $ NE.zip (fromMaybe xs $ NE.nonEmpty $ NE.drop 1 xs) xs
 
 paramMay :: Parsable a => LT.Text -> ActionM (Maybe a)
 paramMay name = (Just <$> param name) `rescue` (\_ -> pure Nothing)
