@@ -105,7 +105,7 @@ packageSection cls resolver name (mFromV, toV) inner =
         a_ [href_ packageUrl] $ do
           toHtml $ unPackageName name
       " " <> toHtml cls <> " "
-      strong_ $ versionChange mFromV toV
+      strong_ [class_ "version"] $ versionChange mFromV toV
     inner
  where
   packageUrl =
@@ -154,8 +154,16 @@ css = T.unlines
   , "  border: 1px solid green;"
   , "}"
   , ""
+  , "section.added .version {"
+  , "  background-color: #d0f0c0;"
+  , "}"
+  , ""
   , "section.removed {"
   , "  border: 1px solid red;"
+  , "}"
+  , ""
+  , "section.removed .version {"
+  , "  background-color: #ffcccc;"
   , "}"
   , ""
   , "section.upgraded, section.downgraded {"
@@ -169,9 +177,11 @@ css = T.unlines
   , ".me-2 {"
   , "  margin-right: .5rem!important;"
   , "}"
+  , ""
   , ".from {"
   , "  background-color: #ffcccc;"
   , "}"
+  , ""
   , ".to {"
   , "  background-color: #d0f0c0;"
   , "}"
