@@ -1,6 +1,6 @@
 # Stackage Resolver Changelog
 
-TODO
+This project is no longer maintained or deployed.
 
 ---
 
